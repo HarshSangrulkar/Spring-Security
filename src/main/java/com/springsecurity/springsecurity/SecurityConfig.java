@@ -20,10 +20,13 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defauSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+        http.authorizeHttpRequests((requests) -> requests.requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().authenticated());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // http.formLogin(Customizer.withDefaults()); // Use Customizer.withDefaults()
         http.httpBasic(Customizer.withDefaults()); // Use Customizer.withDefaults()
+        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 
